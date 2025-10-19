@@ -5,6 +5,7 @@ import face_recognition
 known_face_encodings = []
 known_face_names = []
 
+
 #Here i am load the known faces and there name 
 known_person1_image = face_recognition.load_image_file("Open_CV/AsifKhanFormalImage.jpg") # similarly you can add so many persons and Try the image in jpg okk
 
@@ -16,7 +17,7 @@ known_face_encodings.append(known_person1_encoding) # Add for each persons
 
 
 #here i append the name in names list
-known_face_names.append("Asif Khan")
+known_face_names.append("Asif Khan") # Add for each persons
 
 
 #Now use your open cv knowledge
@@ -31,7 +32,7 @@ while True:
     face_encodings = face_recognition.face_encodings(frame,face_locations)
 
     # This loop found the face in the frame through each faces
-    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings): #top → y-coordinate of the top edge of the face, right → x-coordinate of the right edge of the face, bottom → y-coordinate of the bottom edge of the face, left → x-coordinate of the left edge of the face
         # Checking the faces , if face matches any known faces 
         matches= face_recognition.compare_faces(known_face_encodings, face_encoding)
         name = "Unknown Person" # if any unknown face detect then its show
