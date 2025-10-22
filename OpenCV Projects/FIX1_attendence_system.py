@@ -49,7 +49,11 @@ while True:
 
     # This loop found the face in the frame through each faces
     for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings): #top → y-coordinate of the top edge of the face, right → x-coordinate of the right edge of the face, bottom → y-coordinate of the bottom edge of the face, left → x-coordinate of the left edge of the face.      ///// in the for loop you see top, bottom,left , right this data given by the locations function 
-        # Checking the faces , if face matches any known faces 
+        # Checking the faces , if face matches any known faces
+        face_width = right-left
+        face_height = bottom-top
+        if(face_width<300 or face_height<300):           #Here if the face is too far then the camera then our system not recoginise it ////.  if you want the student comes more near to camera then our system recognisie it then increase the value of 300 , but the 300 is good 150 not good
+            continue
         matches= face_recognition.compare_faces(known_face_encodings, face_encoding)
         name = "Unknown Person" # if any unknown face detect then its show
 
