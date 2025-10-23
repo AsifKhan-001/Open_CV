@@ -3,6 +3,13 @@ import face_recognition
 import csv
 from datetime import datetime
 
+# import threading, os       #these for just a sound
+
+# def play_beep():
+#     # This runs separately, so OpenCV keeps running
+#     os.system('afplay /System/Library/Sounds/Glass.aiff')
+
+
 
 # To create a csv fileand store the data
 csv_file = open("Open_CV/attendance_records.csv",mode="a",newline="")
@@ -63,16 +70,25 @@ while True:
             status = "Present"
             csv_writer.writerow([name,time_now,status])
             csv_file.flush() #record the all datas actually we use when some data stuck anywhere
+            # threading.Thread(target=play_beep).start()       #this for just a sound
+
+            
+            
 
         # Draw a box and labels
         cv2.rectangle(frame,(left,top),(right,bottom),(0,0,255),2)
+
         cv2.putText(frame,name,(left,top-33),cv2.FONT_HERSHEY_SIMPLEX,0.9,(0,255,255),2)
+
+        # cv2.putText(frame, "Attandence Marked ✅",(left,top-500),0.9,(0,255,0),5)
+
         if name!= "Unknown Person":
 
-            cv2.putText(frame,"present",(left,top-10),cv2.FONT_HERSHEY_SIMPLEX,0.9,(0,255,0),2)
-
+            cv2.putText(frame,f"{name} Attandence Marked",(left-300,top+400),cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
+            
     
     cv2.imshow("Frame",frame)
+    
 
     if cv2.waitKey(1) & 0XFF == ord("q"):
         break
