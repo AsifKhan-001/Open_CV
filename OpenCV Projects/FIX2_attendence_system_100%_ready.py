@@ -3,16 +3,16 @@
 
 import cv2
 import face_recognition
-import dlib
+import dlib                    #its for the face detection and mainly for the face LANDMARKS which length is 68.
 from imutils import face_utils      #we actually not use it you might be comment it or just ignore this warnings
 from scipy.spatial import distance as dist
 import csv
 from datetime import datetime
 
-from scipy.spatial import distance as dist
+from scipy.spatial import distance as dist           #this library helps me to distance between the landmarks , actually blink dection is detect when its measure the distance btw the two landmarks in each frame and if distance suddlenly decrease and then increase that's a blink
 
 # Define a function to calculate the Eye Aspect Ratio (EAR) ///// its pretrained so not more focus on it
-def eye_aspect_ratio(eye):
+def eye_aspect_ratio(eye):      #EAR is detct the landmarks movement ,p0 and p3: left-most and right-most horizontal eye corners  &&&& p1,p2,p4,p5: vertical landmarks ///// its work like when vertical landmarks shrink then eyes close
     # compute the euclidean distances between the two sets of vertical eye landmarks (x, y)-coordinates
     A = dist.euclidean(eye[1], eye[5])
     B = dist.euclidean(eye[2], eye[4])
@@ -25,7 +25,7 @@ def eye_aspect_ratio(eye):
     return ear
 
 
-predictor = dlib.shape_predictor("Open_CV/shape_predictor_68_face_landmarks.dat")     #this file download by other source and extract it then paste the path of that file which help to predictor
+predictor = dlib.shape_predictor("Open_CV/shape_predictor_68_face_landmarks.dat")     #this file download by other source and extract it then paste the path of that file which help to predictor  //////🛑 this gives the 68 landmarkes of the face these landmarks are include EYES,NOSE,EAR etc...
 detector = dlib.get_frontal_face_detector()
 
 
@@ -50,7 +50,7 @@ recorded_names = set() #make a set which name is recorded names
 
 blink_counter = 0
 
-(leftEye, rightEye) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"], face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]             # its just define the lefteye and righteye here thats also pretrained but vs code not to catch it up so we actually wright in the code
+(leftEye, rightEye) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"], face_utils.FACIAL_LANDMARKS_IDXS["right_eye"] #with help of this function we specially decode the lendmarks of eyes and seperate it on the bases of left and right and hover on it to see the nose mouth just its give leftEye  = (42, 48) & rightEye = (36, 42) etc..            # its just define the lefteye and righteye here thats also pretrained but vs code not to catch it up so we actually wright in the code
 
 
 #Here i am load the known faces and there name 
@@ -84,23 +84,24 @@ while True:
         face_width = right-left
         face_height = bottom-top
         if(face_width<300 or face_height<300):           #Here if the face is too far then the camera then our system not recoginise it ////.  if you want the student comes more near to camera then our system recognisie it then increase the value of 300 , but the 300 is good 150 not good
+            #we put a text that comes closer please
             continue
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = detector(gray)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)         #convert to grayscale
+        faces = detector(gray)                               #we detect the faces landmarks and more features with the help of DETECTOR
         for face in faces:
             shape = predictor(gray, face)
-            shape = face_utils.shape_to_np(shape)
+            shape = face_utils.shape_to_np(shape)          #convert the dlib's landmarks into the numpy arry with the help of face_utils
             
-            # Step 3: Calculate EAR (eye open/close ratio)
-            leftEyePts = shape[leftEye[0]:leftEye[1]]
+            #Calculate EAR (eye open/close ratio)
+            leftEyePts = shape[leftEye[0]:leftEye[1]]         #here we slicing the specific landmarks of shape which have the all landmarks of the face like leftear[0] stating landmark if left eye and lefteye[1] this is the ending landmarks of left eyes simlarly with right eye
             rightEyePts = shape[rightEye[0]:rightEye[1]]
 
             leftEAR = eye_aspect_ratio(leftEyePts)
             rightEAR = eye_aspect_ratio(rightEyePts)
             ear = (leftEAR + rightEAR) / 2.0
 
-            # Step 4: Check blink
-            if ear < 0.20:
+            #Check blink
+            if ear < 0.20:                #0.20 is the thresold value of EAR
                 blink_counter += 1
             else:
                 if blink_counter >= 2:

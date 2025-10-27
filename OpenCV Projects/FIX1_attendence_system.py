@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 # To create a csv fileand store the data
-csv_file = open("Open_CV/attendance_records.csv",mode="a",newline="")
+csv_file = open("attendance_records.csv",mode="a",newline="")
 csv_writer = csv.writer(csv_file)
 
 #write header only if file is empty
@@ -23,8 +23,8 @@ known_face_names = []
 recorded_names = set() #make a set which name is recorded names
 
 #Here i am load the known faces and there name 
-known_person1_image = face_recognition.load_image_file("Open_CV/AsifKhanFormalImage.jpg") # similarly you can add so many persons and Try the image in jpg okk
-known_person2_image = face_recognition.load_image_file("Open_CV/person1.jpg")
+known_person1_image = face_recognition.load_image_file("AsifKhanFormalImage.jpg") # similarly you can add so many persons and Try the image in jpg okk
+known_person2_image = face_recognition.load_image_file("person1.jpg")
 
 known_person1_encoding = face_recognition.face_encodings(known_person1_image)[0] # similarly ad for each persons //// [0] we use the for select first face
 known_person2_encoding = face_recognition.face_encodings(known_person2_image)[0]      # face_encodings is make a list of numbers which length is 128 and which describe the face uniqueness.  /// if multiple face in one image this make multiple inner list of length 128.
